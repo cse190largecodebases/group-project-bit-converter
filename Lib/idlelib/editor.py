@@ -65,7 +65,7 @@ class EditorWindow:
     from idlelib.format import FormatParagraph, FormatRegion, Indents, Rstrip
     from idlelib.parenmatch import ParenMatch
     from idlelib.zoomheight import ZoomHeight
-#   from idlelib.git import GitConfigurationGUI
+#   from idlelib.git import SourceControlGUI
 
     filesystemencoding = sys.getfilesystemencoding()  # for file names
     help_url = None
@@ -350,8 +350,8 @@ class EditorWindow:
         text.bind("<<force-open-calltip>>", ctip.force_open_calltip_event)
         text.bind("<<zoom-height>>", self.ZoomHeight(self).zoom_height_event)
 
-        # Keybinding for GIT Configurations
-        text.bind("<<git>>", lambda event: open_git_configuration_gui())
+        # Keybinding for Source Control
+        text.bind("<<git>>", lambda event: open_source_control_gui())
 
 
         if self.allow_code_context:
@@ -1692,11 +1692,11 @@ if __name__ == '__main__':
     run(_editor_window)
 
 
-# WIP - Git Configurations
-class GitConfigurationGUI(tk.Tk):
+# WIP - Source Control
+class SourceControlGUI(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("Git Configuration")
+        self.title("Source Control")
         
         # Create the tabs
         self.tab_control = ttk.Notebook(self)
@@ -1762,6 +1762,6 @@ class GitConfigurationGUI(tk.Tk):
         if output:
             print(output)
 
-def open_git_configuration_gui():
-    git_gui = GitConfigurationGUI()
+def open_source_control_gui():
+    git_gui = SourceControlGUI()
     git_gui.mainloop()

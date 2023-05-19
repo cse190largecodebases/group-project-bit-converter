@@ -2,10 +2,10 @@ import tkinter as tk
 from tkinter import ttk
 import subprocess
 
-class GitConfigurationGUI(tk.Tk):
+class SourceControlGUI(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("Git Configuration")
+        self.title("Source Control")
         
         # Create the tabs
         self.tab_control = ttk.Notebook(self)
