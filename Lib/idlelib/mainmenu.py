@@ -103,7 +103,7 @@ menudefs = [
    ('Show _Code Context', '<<toggle-code-context>>'),
    ('Show _Line Numbers', '<<toggle-line-numbers>>'),
    ('_Zoom Height', '<<zoom-height>>'),
-   ('Git _Configurations', '<<git>>'),
+   ('Source Control', '<<git>>'),
    ]),
 
  ('window', [
