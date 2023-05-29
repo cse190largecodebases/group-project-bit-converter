@@ -7,6 +7,7 @@ class SourceControlGUI(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Source Control")
+        self.repo = None  # repository class variable for running GitPython methods
         
         # Create the tabs
         self.tab_control = ttk.Notebook(self)
@@ -60,19 +61,32 @@ class SourceControlGUI(tk.Tk):
         repo_frame.pack()
 
     def perform_repo(self, message):
-        result = subprocess.run(["echo", message], capture_output=True, text=True)
-        output = result.stdout.strip()
-        if output:
-            print(output)
-        repo = git.Repo.init(output)
-        print(repo.git.status())
+        message = message.strip()
+        print(message) # temporary message for development
+        self.repo = git.Repo.init(message)
 
     def git_add(self):
-        # Run the 'git add' command using subprocess
-        result = subprocess.run(["git", "add", "."], capture_output=True, text=True)
-        output = result.stdout.strip()
-        if output:
-            print(output)
+        # Run the 'git add' command using GitPython
+        add_window = tk.Toplevel(self)
+        add_window.title("Git Add")
+        
+        add_frame = ttk.Frame(add_window)
+        repo_name = "No Repository Selected. Please Select a Repository First"
+        if(self.repo is not None): repo_name = str(self.repo.working_dir)
+        add_label = ttk.Label(add_frame, text="Enter File Path Excluding Repository Path. e.g. file.py or folder/file.py" + "\nRepository Selected: " + repo_name)
+        add_label.pack(padx=10, pady=10)
+        
+        add_entry = ttk.Entry(add_frame, width=50)
+        add_entry.pack(padx=10, pady=10)
+        
+        add_button = ttk.Button(add_frame, text="Add", command=lambda: self.perform_add(add_entry.get()))
+        add_button.pack(padx=10, pady=10)
+        
+        add_frame.pack()
+
+    def perform_add(self, message):
+        self.repo.index.add(message)
+        print(self.repo.git.status()) # temporary message for development
     
     def git_commit(self):
         # Run the 'git commit' command using subprocess
