@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import subprocess
 import git
+import os
 
 class SourceControlGUI(tk.Tk):
     def __init__(self):
@@ -100,8 +101,23 @@ class SourceControlGUI(tk.Tk):
         return
 
     def perform_add(self, message):
-        self.repo.index.add(message)
-        print(self.repo.git.status()) # temporary message for development
+        if not os.path.exists(message):
+            self.status_text.configure(state="normal")  # Enable editing to update the text
+            self.status_text.delete(1.0, tk.END)  # Clear previous content
+            self.status_text.insert(tk.END, f"File not found: {message}\n")
+            self.status_text.configure(state="disabled")  # Disable editing again
+        elif self.repo.is_dirty(path=message):
+            self.status_text.configure(state="normal")  # Enable editing to update the text
+            self.status_text.delete(1.0, tk.END)  # Clear previous content
+            self.status_text.insert(tk.END, f"File already added: {message}\n")
+            self.status_text.configure(state="disabled")  # Disable editing again
+        else:
+            self.repo.index.add(message)
+            self.status_text.configure(state="normal")  # Enable editing to update the text
+            self.status_text.delete(1.0, tk.END)  # Clear previous content
+            self.status_text.insert(tk.END, f"Added: {message}\n")
+            self.status_text.insert(tk.END, self.repo.git.status())
+            self.status_text.configure(state="disabled")  # Disable editing again
     
     def git_commit(self):
         # Run the 'git commit' command using subprocess
