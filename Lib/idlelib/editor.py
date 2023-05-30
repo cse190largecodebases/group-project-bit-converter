@@ -15,6 +15,9 @@ from tkinter.ttk import Scrollbar
 from tkinter import simpledialog
 from tkinter import messagebox
 
+import tkinter as tk
+from tkinter import ttk
+
 from idlelib.config import idleConf
 from idlelib import configdialog
 from idlelib import grep
@@ -29,6 +32,8 @@ from idlelib import search
 from idlelib.tree import wheel_event
 from idlelib.util import py_extensions
 from idlelib import window
+from idlelib.git import SourceControlGUI
+
 
 # The default tab setting for a Text widget, in average-width characters.
 TK_TABWIDTH_DEFAULT = 8
@@ -345,6 +350,11 @@ class EditorWindow:
         text.bind("<<refresh-calltip>>", ctip.refresh_calltip_event)
         text.bind("<<force-open-calltip>>", ctip.force_open_calltip_event)
         text.bind("<<zoom-height>>", self.ZoomHeight(self).zoom_height_event)
+
+        # Keybinding for Source Control
+        text.bind("<<git>>", lambda event: open_source_control_gui())
+
+
         if self.allow_code_context:
             self.code_context = self.CodeContext(self)
             text.bind("<<toggle-code-context>>",
@@ -1681,3 +1691,8 @@ if __name__ == '__main__':
 
     from idlelib.idle_test.htest import run
     run(_editor_window)
+
+
+def open_source_control_gui():
+    git_gui = SourceControlGUI()
+    git_gui.mainloop()
