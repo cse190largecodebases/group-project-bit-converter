@@ -75,8 +75,20 @@ class SourceControlGUI(tk.Tk):
 
     def perform_repo(self, message):
         message = message.strip()
-        print(message) # temporary message for development
-        self.repo = git.Repo.init(message)
+        self.status_text.configure(state="normal")  # Enable editing to update the text
+        self.status_text.delete(1.0, tk.END)  # Clear previous content
+
+        if os.path.isfile(message):
+            self.status_text.insert(tk.END, f"Invalid selection: {message} is a file, not a repository.\n")
+        else:
+            try:
+                self.repo = git.Repo(message, search_parent_directories=True)
+                self.status_text.insert(tk.END, f"Existing repository selected: {message}\n")
+            except git.exc.InvalidGitRepositoryError:
+                self.repo = git.Repo.init(message)
+                self.status_text.insert(tk.END, f"New repository initialized: {message}\n")
+
+        self.status_text.configure(state="disabled")  # Disable editing again
 
     def git_add(self):
         # Run the 'git add' command using GitPython
