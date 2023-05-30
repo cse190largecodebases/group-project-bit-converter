@@ -13,8 +13,6 @@ class TestSourceControlGUI(unittest.TestCase):
         expected_phrase = "Your branch is up to date with"
         self.assertIn(expected_phrase, repo_status)
 
-        # Cleanup
-
 
 if __name__ == '__main__':
     unittest.main()
