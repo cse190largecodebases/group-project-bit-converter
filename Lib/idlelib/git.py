@@ -13,8 +13,9 @@ class SourceControlGUI(tk.Tk):
         self.tab_control = ttk.Notebook(self)
         self.repo_tab()
         self.add_tab()
+        self.remove_tab()
         self.commit_tab()
-        self.push_tab()
+        self.status_tab()
         # Add more tabs for other Git commands
         
         self.tab_control.pack(expand=True, fill=tk.BOTH)
@@ -30,6 +31,12 @@ class SourceControlGUI(tk.Tk):
         add_button = ttk.Button(add_frame, text="Add", command=self.git_add)
         add_button.pack(padx=10, pady=10)
         self.tab_control.add(add_frame, text="Add")
+
+    def remove_tab(self):
+        remove_frame = ttk.Frame(self.tab_control)
+        remove_button = ttk.Button(remove_frame, text="Add", command=self.git_remove)
+        remove_button.pack(padx=10, pady=10)
+        self.tab_control.add(remove_frame, text="Remove")
     
     def commit_tab(self):
         commit_frame = ttk.Frame(self.tab_control)
@@ -37,11 +44,11 @@ class SourceControlGUI(tk.Tk):
         commit_button.pack(padx=10, pady=10)
         self.tab_control.add(commit_frame, text="Commit")
     
-    def push_tab(self):
-        push_frame = ttk.Frame(self.tab_control)
-        push_button = ttk.Button(push_frame, text="Push", command=self.git_push)
-        push_button.pack(padx=10, pady=10)
-        self.tab_control.add(push_frame, text="Push")
+    def status_tab(self):
+        status_frame = ttk.Frame(self.tab_control)
+        status_button = ttk.Button(status_frame, text="Status", command=self.git_status)
+        status_button.pack(padx=10, pady=10)
+        self.tab_control.add(status_frame, text="Status")
     
     def git_repo(self):
         # Initialize or select repo based on user input for folder location
@@ -84,6 +91,9 @@ class SourceControlGUI(tk.Tk):
         
         add_frame.pack()
 
+    def git_remove(self):
+        return
+
     def perform_add(self, message):
         self.repo.index.add(message)
         print(self.repo.git.status()) # temporary message for development
@@ -111,9 +121,5 @@ class SourceControlGUI(tk.Tk):
         if output:
             print(output)
     
-    def git_push(self):
-        # Run the 'git push' command using subprocess
-        result = subprocess.run(["git", "push"], capture_output=True, text=True)
-        output = result.stdout.strip()
-        if output:
-            print(output)
+    def git_status(self):
+        return
