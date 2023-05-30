@@ -20,6 +20,11 @@ class SourceControlGUI(tk.Tk):
         
         self.tab_control.pack(expand=True, fill=tk.BOTH)
 
+        # Create the text widget to display git status
+        self.status_text = tk.Text(self, width=80, height=20)
+        self.status_text.pack(padx=10, pady=10)
+        self.status_text.configure(state="disabled")  # Disable editing of the text widget
+
     def repo_tab(self):
         repo_frame = ttk.Frame(self.tab_control)
         repo_button = ttk.Button(repo_frame, text="Select Repository", command=self.git_repo)
@@ -122,4 +127,14 @@ class SourceControlGUI(tk.Tk):
             print(output)
     
     def git_status(self):
-        return
+        if self.repo is not None:
+            repo_status = self.repo.git.status()
+            self.status_text.configure(state="normal")  # Enable editing to update the text
+            self.status_text.delete(1.0, tk.END)  # Clear previous content
+            self.status_text.insert(tk.END, repo_status)
+            self.status_text.configure(state="disabled")  # Disable editing again
+        else:
+            self.status_text.configure(state="normal")  # Enable editing to update the text
+            self.status_text.delete(1.0, tk.END)  # Clear previous content
+            self.status_text.insert(tk.END, "No repository selected.")
+            self.status_text.configure(state="disabled")  # Disable editing again
