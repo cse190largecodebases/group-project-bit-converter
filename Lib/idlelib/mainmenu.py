@@ -103,7 +103,6 @@ menudefs = [
    ('Show _Code Context', '<<toggle-code-context>>'),
    ('Show _Line Numbers', '<<toggle-line-numbers>>'),
    ('_Zoom Height', '<<zoom-height>>'),
-   ('Source Control', '<<git>>'),
    ]),
 
  ('window', [
@@ -115,10 +114,6 @@ menudefs = [
    ('_IDLE Doc', '<<help>>'),
    ('Python _Docs', '<<python-docs>>'),
    ]),
-
-#   ('git', [
-#      ('_Add', None)
-#  ])
 ]
 
 if find_spec('turtledemo'):
