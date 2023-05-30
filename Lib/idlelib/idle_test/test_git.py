@@ -3,6 +3,27 @@ from tkinter import Tk
 from idlelib.git import SourceControlGUI
 
 class TestSourceControlGUI(unittest.TestCase):
+
+    def test_perform_repo(self):
+        app = SourceControlGUI()
+        
+        # Test case 1: Existing repository selected
+        app.perform_repo("/Users/ken/Desktop/group-project-bit-converter")
+        check = "Existing repository selected:"
+        self.assertIn(check, app.status_text.get("1.0",'end-1c'))
+
+        # Test case 2: Non-existing repository selected
+        # Will need to change this path everytime this test runs as it will not be newly initialized anymore.
+        app.perform_repo("/Users/ken/Desktop/test_init5")
+        check = "New repository initialized:"
+        self.assertIn(check, app.status_text.get("1.0",'end-1c'))
+
+        # Test case 3: Invalid file selection
+        app.perform_repo("/Users/ken/Desktop/3e.jpeg")
+        check = "Invalid selection:"
+        self.assertIn(check, app.status_text.get("1.0",'end-1c'))
+
+
     def test_git_status(self):
         app = SourceControlGUI()
 
