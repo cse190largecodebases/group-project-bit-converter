@@ -45,8 +45,8 @@ class TestSourceControlGUI(unittest.TestCase):
 
         # Test Case 2: Remove a file that exists
         app.perform_repo("/Users/ericvu/CSE190/test")
-        app.perform_add("Users/ericvu/CSE190/test/existingfile.txt")
-        app.perform_remove("Users/ericvu/CSE190/test/existingfile.txt")
+        app.perform_add("/Users/ericvu/CSE190/test/existingfile.txt")
+        app.perform_remove("/Users/ericvu/CSE190/test/existingfile.txt")
         expected_output = "Removed:"
         self.assertIn(expected_output, app.status_text.get("1.0", 'end-1c'))
 
