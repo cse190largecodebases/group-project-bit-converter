@@ -34,6 +34,22 @@ class TestSourceControlGUI(unittest.TestCase):
         expected_phrase = "Your branch is up to date with"
         self.assertIn(expected_phrase, repo_status)
 
+    def test_git_remove(self):
+        app = SourceControlGUI()
+
+        # Test Case 1: Remove a file that does not exist
+        app.perform_repo("/Users/ericvu/CSE190/test")
+        app.perform_remove("/Users/ericvu/CSE190/test/non_existing_file.txt")
+        expected_output = "File not found:" 
+        self.assertIn(expected_output, app.status_text.get("1.0",'end-1c')) 
+
+        # Test Case 2: Remove a file that exists
+        app.perform_repo("/Users/ericvu/CSE190/test")
+        app.perform_add("Users/ericvu/CSE190/test/existingfile.txt")
+        app.perform_remove("Users/ericvu/CSE190/test/existingfile.txt")
+        expected_output = "Removed:"
+        self.assertIn(expected_output, app.status_text.get("1.0", 'end-1c'))
+
 
 if __name__ == '__main__':
     unittest.main()
