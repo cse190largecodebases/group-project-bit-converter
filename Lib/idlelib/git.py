@@ -180,10 +180,28 @@ class SourceControlGUI(tk.Tk):
         commit_frame.pack()
     
     def perform_commit(self, message):
-        result = subprocess.run(["git", "commit", "-m", message], capture_output=True, text=True)
-        output = result.stdout.strip()
-        if output:
-            print(output)
+        # referring to this doc: https://stackoverflow.com/questions/40633097/gitpython-command-syntax-for-git-commit
+        # message = message.strip()
+
+        
+        # committer = git.Actor("An committer", "commiter@example.com")
+
+        # self.repo.git.commit(message)
+        # self.repo.git.commit('-m',message)
+        # self.repo.index.commit('-m',message)
+        if self.repo is not None:
+            author = git.Actor("An author", "author@example.com")
+            self.repo.index.commit(message, author = author)            
+            self.status_text.configure(state="normal")  # Enable editing to update the text
+            self.status_text.delete(1.0, tk.END)  # Clear previous content
+            self.status_text.insert(tk.END, f"Committed: {message}\n")
+            self.status_text.insert(tk.END, self.repo.git.status())
+            self.status_text.configure(state="disabled")  # Disable editing again
+        else:
+            self.status_text.configure(state="normal")  # Enable editing to update the text
+            self.status_text.delete(1.0, tk.END)  # Clear previous content
+            self.status_text.insert(tk.END, "No repository selected.\n")
+            self.status_text.configure(state="disabled")  # Disable editing again
     
     def git_status(self):
         if self.repo is not None:
