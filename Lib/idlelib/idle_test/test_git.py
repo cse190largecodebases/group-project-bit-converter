@@ -14,9 +14,9 @@ class TestSourceControlGUI(unittest.TestCase):
 
         # Test case 2: Non-existing repository selected
         # Will need to change this path everytime this test runs as it will not be newly initialized anymore.
-        app.perform_repo("/Users/ken/Desktop/test_init5")
-        check = "New repository initialized:"
-        self.assertIn(check, app.status_text.get("1.0",'end-1c'))
+        # app.perform_repo("/Users/ken/Desktop/test_init5")
+        # check = "New repository initialized:"
+        # self.assertIn(check, app.status_text.get("1.0",'end-1c'))
 
         # Test case 3: Invalid file selection
         app.perform_repo("/Users/ken/Desktop/3e.jpeg")
@@ -49,6 +49,29 @@ class TestSourceControlGUI(unittest.TestCase):
         app.perform_remove("/Users/ericvu/CSE190/test/existingfile.txt")
         expected_output = "Removed:"
         self.assertIn(expected_output, app.status_text.get("1.0", 'end-1c'))
+
+    def test_git_add(self):
+        app = SourceControlGUI()
+
+        # Test Case 1: File not Found
+        app.perform_repo("/Users/ken/Desktop/group-project-bit-converter")
+        app.perform_add("non_existing_file.txt")
+        expected_output = "File not found:"
+        self.assertIn(expected_output, app.status_text.get("1.0",'end-1c'))
+
+        # Test Case 2: Adding a staged file already
+        app.perform_repo("/Users/ken/Desktop/group-project-bit-converter")
+        app.perform_add("example_unittest.py")
+        app.perform_add("example_unittest.py")  # Attempt to add the same file again
+        expected_output = "File already added:"
+        self.assertIn(expected_output, app.status_text.get("1.0",'end-1c'))
+
+        # Test Case 3: Successfully adding a file to the stage
+        app.perform_repo("/Users/ken/Desktop/group-project-bit-converter")
+        app.perform_add("new_file.rtf")
+        expected_output = "Added:"
+        self.assertIn(expected_output, app.status_text.get("1.0",'end-1c'))
+
 
 
 if __name__ == '__main__':
