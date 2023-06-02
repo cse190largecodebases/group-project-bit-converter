@@ -40,7 +40,7 @@ class SourceControlGUI(tk.Tk):
 
     def remove_tab(self):
         remove_frame = ttk.Frame(self.tab_control)
-        remove_button = ttk.Button(remove_frame, text="Add", command=self.git_remove)
+        remove_button = ttk.Button(remove_frame, text="Remove", command=self.git_remove)
         remove_button.pack(padx=10, pady=10)
         self.tab_control.add(remove_frame, text="Remove")
     
