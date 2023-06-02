@@ -80,6 +80,8 @@ class SourceControlGUI(tk.Tk):
 
         if os.path.isfile(message):
             self.status_text.insert(tk.END, f"Invalid selection: {message} is a file, not a repository.\n")
+        elif not os.path.exists(message):
+            self.status_text.insert(tk.END, f"Path does not exist: {message}\n")
         else:
             try:
                 self.repo = git.Repo(message, search_parent_directories=True)
@@ -89,6 +91,7 @@ class SourceControlGUI(tk.Tk):
                 self.status_text.insert(tk.END, f"New repository initialized: {message}\n")
 
         self.status_text.configure(state="disabled")  # Disable editing again
+
 
     def git_add(self):
         # Run the 'git add' command using GitPython
