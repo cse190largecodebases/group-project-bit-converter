@@ -179,10 +179,24 @@ class SourceControlGUI(tk.Tk):
         commit_frame.pack()
     
     def perform_commit(self, message):
-        result = subprocess.run(["git", "commit", "-m", message], capture_output=True, text=True)
-        output = result.stdout.strip()
-        if output:
-            print(output)
+        self.status_text.configure(state="normal")  # Enable editing to update the text
+        self.status_text.delete(1.0, tk.END)  # Clear previous content
+
+
+        repo_path = self.repo.working_dir
+        command = ['git', 'commit', '-m', message]
+        result = subprocess.run(command, cwd=repo_path, capture_output=True, text=True)
+
+        if result.returncode == 0:
+            print("Commit successful!")
+        else:
+            print("Commit failed.")
+            print("Error:", result.stderr)
+
+        self.status_text.insert(tk.END, "Commit successful\n")
+        self.status_text.insert(tk.END, self.repo.git.status())
+
+        self.status_text.configure(state="disabled")
     
     def git_status(self):
         if self.repo is not None:
