@@ -92,7 +92,6 @@ class SourceControlGUI(tk.Tk):
 
         self.status_text.configure(state="disabled")  # Disable editing again
 
-
     def git_add(self):
         # Run the 'git add' command using GitPython
         add_window = tk.Toplevel(self)
@@ -101,7 +100,7 @@ class SourceControlGUI(tk.Tk):
         add_frame = ttk.Frame(add_window)
         repo_name = "No Repository Selected. Please Select a Repository First"
         if(self.repo is not None): repo_name = str(self.repo.working_dir)
-        add_label = ttk.Label(add_frame, text="Enter File Path Excluding Repository Path. e.g. file.py or folder/file.py" + "\nRepository Selected: " + repo_name)
+        add_label = ttk.Label(add_frame, text="Enter File Path. e.g. file.py or folder/file.py" + "\nRepository Selected: " + repo_name)
         add_label.pack(padx=10, pady=10)
         
         add_entry = ttk.Entry(add_frame, width=50)
@@ -114,6 +113,7 @@ class SourceControlGUI(tk.Tk):
 
     # Tested
     def perform_add(self, message):
+        message = "".join(message.split())
         try:
             self.repo.index.add([message])
             self.status_text.configure(state="normal")  # Enable editing to update the text
@@ -134,7 +134,7 @@ class SourceControlGUI(tk.Tk):
         remove_frame = ttk.Frame(remove_window) # create a frame for the following
         repo_name = "No Repository Selected. Please Select a Repository First"
         if(self.repo is not None): repo_name = str(self.repo.working_dir)
-        remove_label = ttk.Label(remove_frame, text="Enter File Path Excluding Repository Path. e.g. file.py or folder/file.py" + "\nRepository Selected: " + repo_name)
+        remove_label = ttk.Label(remove_frame, text="Enter File Path. e.g. file.py or folder/file.py" + "\nRepository Selected: " + repo_name)
         remove_label.pack(padx=10, pady=10)
 
         remove_entry = ttk.Entry(remove_frame, width=50)
@@ -146,19 +146,18 @@ class SourceControlGUI(tk.Tk):
         remove_frame.pack()
 
     def perform_remove(self, message):
-        message = message.strip()
-        
-        if not os.path.exists(message):
-            self.status_text.configure(state="normal")  # Enable editing to update the text
-            self.status_text.delete(1.0, tk.END)  # Clear previous content
-            self.status_text.insert(tk.END, f"File not found: {message}\n")
-            self.status_text.configure(state="disabled")  # Disable editing again
-        else:
-            self.repo.index.remove(message)
+        message = "".join(message.split())
+        try:
+            self.repo.index.remove([message])
             self.status_text.configure(state="normal")  # Enable editing to update the text
             self.status_text.delete(1.0, tk.END)  # Clear previous content
             self.status_text.insert(tk.END, f"Removed: {message}\n")
             self.status_text.insert(tk.END, self.repo.git.status())
+            self.status_text.configure(state="disabled")  # Disable editing again
+        except(ValueError, git.exc.GitCommandError):
+            self.status_text.configure(state="normal")  # Enable editing to update the text
+            self.status_text.delete(1.0, tk.END)  # Clear previous content
+            self.status_text.insert(tk.END, f"File not found or isn't staged: {message}\n")
             self.status_text.configure(state="disabled")  # Disable editing again
     
     def git_commit(self):
