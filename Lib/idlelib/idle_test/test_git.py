@@ -1,6 +1,7 @@
 import unittest
 from tkinter import Tk
 from idlelib.git import SourceControlGUI
+from unittest.mock import patch
 import tempfile
 
 class TestSourceControlGUI(unittest.TestCase):
@@ -70,6 +71,37 @@ class TestSourceControlGUI(unittest.TestCase):
                 fp.write('temporary file contents')
                 app.perform_add("file.py")
                 expected_output = "Added:"
+                self.assertIn(expected_output, app.status_text.get("1.0",'end-1c'))
+
+    def test_git_commit(self):
+        app = SourceControlGUI()
+
+        # Test Case 1: No files to commit   
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            app.perform_repo(tmpdirname)
+            app.perform_commit("test commit message")
+            expected_output = "No changes to commit."
+            self.assertIn(expected_output, app.status_text.get("1.0",'end-1c'))
+
+        #  Test Case 2: Successfully commit file
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            app.perform_repo(tmpdirname)
+            with open(tmpdirname + "/file.py", 'w') as fp:
+                fp.write('temporary file contents')
+                app.perform_add("file.py")
+            app.perform_commit("test commit message")
+            expected_output = "Commit successful!\n"
+            self.assertIn(expected_output, app.status_text.get("1.0",'end-1c'))
+
+        
+        # Test Case 3: Commit Failed
+        with tempfile.TemporaryDirectory() as tmpdirname:
+                app.perform_repo(tmpdirname)
+                with open(tmpdirname + "/file.py", 'w') as fp:
+                    fp.write('temporary file contents')
+                    app.perform_add("file.py")
+                app.perform_commit("")
+                expected_output = "Commit failed."
                 self.assertIn(expected_output, app.status_text.get("1.0",'end-1c'))
 
 
