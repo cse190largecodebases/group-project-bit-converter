@@ -1,7 +1,6 @@
 import unittest
 from tkinter import Tk
 from idlelib.git import SourceControlGUI
-from unittest.mock import patch
 import tempfile
 
 class TestSourceControlGUI(unittest.TestCase):
